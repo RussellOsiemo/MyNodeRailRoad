@@ -1,13 +1,20 @@
 const http = require('http');
-
+const url = require('url');
+var fs = require('fs');
 const hostname = '127.0.0.1';
 const port = 3000;
-var fs = require('fs');
+
 const server = http.createServer((req, res) => {
-    fs.readFile('home.html', function(err, data){
-               res.writeHead(200,{'Content-Type': 'text/plain'});
-        res.write(data);
-        res.end('Hello World');
+  var q = url.parse(req.url, true);
+  var filename = "." + q.pathname;
+   fs.readFile(filename, function(err, data){
+             if (err){
+              res.writeHead(404, {'Content-Type': 'text/html'});
+              return res.end('404 Not Found');
+             }
+    res.writeHead(200, {'Conte-Type': 'text/html'});
+    res.write(data);
+    return res.end();
     })
   
   
